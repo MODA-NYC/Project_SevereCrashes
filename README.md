@@ -1,3 +1,11 @@
+MatchedAnalysis-Ped.ipynb - main notebook for analysis
+MatchedExplore.ipynb - exploring the matched data
+MV104-data_explore.ipynb - exploring the full MV104 (crash) data
+MV104-variable_map.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
+
+
+Edits in google doc
+
 # DOT Classifying Severe Crashes
 Predicting which traffic crashes result in severe injuries helps to prioritize locations for street safety redesign.
 
