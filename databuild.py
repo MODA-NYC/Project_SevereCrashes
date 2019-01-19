@@ -26,28 +26,44 @@ def readDMV():
     veh.VEHBDYT_ID = pd.to_numeric(veh.VEHBDYT_ID,errors='coearse')
     ind.INDIV_AGE = pd.to_numeric(ind.INDIV_AGE,errors='coearse')
     
-    print 'crash table',crash.shape
-    print 'person table', ind.shape
-    print 'vehicle table', veh.shape
+    print 'full crash table',crash.shape
+    print 'full person table', ind.shape
+    print 'full vehicle table', veh.shape
     
     return crash, ind, veh
 
 def buildTablesDMV(crash,ind,veh):
-    '''building pedestrian and two vehicle crash tables from DMV'''
+    '''
+    returns pedestrian table (only one vehicle crashes) and
+    twoVeh table with people involved in two-vehicle crashes 
+    (a single crash may be represented multiple times since multiple 
+    people are involved
+    inputs are the three DMV tables    
+    '''
     # only police reported crashes
+    # I'm assuming the POL_REPT variables says whether or not a police report was completed
+    # According to the codebook the INJT_ID variable 16,17,18 corresponds to the civilian crash form
+    # so filtering out those as well
     crashPR = crash[crash.POL_REPT=='Y']
     indPR = ind[ind.CS_ID.isin(crashPR.CS_ID)&(~ind.INJT_ID.isin(['16','17','18']))]
 
     # combining data using person info at the row level.
-    base = indPR.drop(['ORG_HOSP_CDE','LAGSTP','LAGINJT','LAGHOSP'],axis=1)
-
+    indPR = indPR.drop(['ORG_HOSP_CDE','LAGSTP','LAGINJT','LAGHOSP'],axis=1)
+    
     #merging in crash info
-    base = base.merge(crash.drop(['RDSYST_ID'],axis=1),
+    base = indPR.merge(crash.drop(['RDSYST_ID'],axis=1),
                       how='left',on='CS_ID')
-    print 'base',base.shape
 
     ####
-    # keeping 2 veh crashes only
+    
+    # other vehicle info
+    # motor vehicles (not pedestrians etc) 
+    vehMotor = veh[(veh.VEHBDYT_ID<100)&(veh.VEHBDYT_ID>0)]
+    vehMotor = vehMotor.drop(['CV_WEIGHT_LBS','SHZMTT_ID','DMV_VIN_NUM'],axis=1)
+    
+    ####
+    # 2 veh crashes only
+    
     twoVeh = base[base.VEH_CNT=='2']
 
     # merging in own vehicle info
@@ -56,11 +72,6 @@ def buildTablesDMV(crash,ind,veh):
                       how='left',on='CV_ID')
     # own vehicle is requrired to be a motor vehicle (not pedestrian or bicycle)
     twoVeh = twoVeh[(twoVeh.VEHBDYT_ID<100)&(twoVeh.VEHBDYT_ID>0)]
-
-    # other vehicle info
-    # only keeping motor vehicles (not pedestrians etc) 
-    vehMotor = veh[(veh.VEHBDYT_ID<100)&(veh.VEHBDYT_ID>0)]
-    vehMotor = vehMotor.drop(['CV_WEIGHT_LBS','SHZMTT_ID','DMV_VIN_NUM'],axis=1)
 
     #dataframe to join crash and vehicle id's
     cv = crash[crash.VEH_CNT=='2'][['CS_ID']].merge(vehMotor[['CS_ID','CV_ID']],
@@ -72,7 +83,7 @@ def buildTablesDMV(crash,ind,veh):
     twoVeh = twoVeh.merge(vehMotor.add_suffix('_other'),
                       how='left',left_on='CV2_ID',right_on='CV_ID_other')
     print 'two veh', twoVeh.shape
-
+   
     ####
     # only keeping 1 veh crashes
     ped = base[(base.CIROLET_ID.isin(['6','7','14']))&(base.VEH_CNT=='1')]
@@ -90,8 +101,7 @@ def buildTablesDMV(crash,ind,veh):
                     how='left',left_on='CV2_ID', right_on='CV_ID_other')
 
     # merge in driver info
-    driver = indPR[indPR.CIROLET_ID=='1'].drop(['ORG_HOSP_CDE',
-                                                'LAGSTP','LAGINJT','LAGHOSP'],axis=1)
+    driver = indPR[indPR.CIROLET_ID=='1']
 
     ped = ped.merge(driver.add_suffix('_driver'), how='left',left_on='CV_ID_other',
              right_on='CV_ID_driver')
@@ -103,9 +113,9 @@ def buildTablesDMV(crash,ind,veh):
     ped = ped.merge(vin_api_data[['VIN','BodyClass']],
                     how='left',left_on='VIN_other',right_on='VIN')
     
-    print 'ped',ped.shape
+    print 'pedestrians/bicyclists (police reported) (single vehicle)',ped.shape
     
-    return base, ped, twoVeh
+    return ped, twoVeh
 
 def readLinked():
     ''' read in linked(matched) DMV/SPARKS data'''
@@ -129,8 +139,9 @@ def readLinked():
     return linked
 
 def mergeBiss(df,bissdf):
-    ''' merge BISS onto dataframe df
-    returns original dataframe df with biss info'''
+    ''' 
+    returns original dataframe df with biss info merged in
+    '''
     df = df.merge(bissdf[['CI_ID','BISS']],how='left',on='CI_ID')
 
     # everyone who is killed, set their BISS to 75
@@ -355,9 +366,8 @@ def formatVars(df):
         17 : 'Making Left Turn',
         18 : 'Other',#'Police Pursuit',
         20 : 'Other'}
-
-    df['f_act_veh_other'] = df.PACCACTT_ID_other.astype(float).map(action)
     try:
+        df['f_act_veh_other'] = df.PACCACTT_ID_other.astype(float).map(action)
         df['f_act_veh'] = df.PACCACTT_ID.astype(float).map(action)
     except:
         0
@@ -417,49 +427,51 @@ def formatVars(df):
     ###
     # veh body type from decoded VIN
     # pedestrian only has other vehicle.
-    df['f_veh_other_vin']='none'
-    df.loc[df.BodyClass.fillna('-').str.contains('Motorcycle'),
-            'f_veh_other_vin'] = 'Motorcycle'
+    try: 
+        df['f_veh_other_vin']='none'
+        df.loc[df.BodyClass.fillna('-').str.contains('Motorcycle'),
+                'f_veh_other_vin'] = 'Motorcycle'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('SUV'),
-            'f_veh_other_vin'] = 'SUV'
+        df.loc[df.BodyClass.fillna('-').str.contains('SUV'),
+                'f_veh_other_vin'] = 'SUV'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('SUV'),
-            'f_veh_other_vin'] = 'SUV'
+        df.loc[df.BodyClass.fillna('-').str.contains('SUV'),
+                'f_veh_other_vin'] = 'SUV'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('Bus'),
-            'f_veh_other_vin'] = 'Bus'
+        df.loc[df.BodyClass.fillna('-').str.contains('Bus'),
+                'f_veh_other_vin'] = 'Bus'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('Truck'),
-            'f_veh_other_vin'] = 'Truck'
+        df.loc[df.BodyClass.fillna('-').str.contains('Truck'),
+                'f_veh_other_vin'] = 'Truck'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('Sedan'),
-            'f_veh_other_vin'] = 'Car'
+        df.loc[df.BodyClass.fillna('-').str.contains('Sedan'),
+                'f_veh_other_vin'] = 'Car'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('CUV'),
-            'f_veh_other_vin'] = 'Car'
+        df.loc[df.BodyClass.fillna('-').str.contains('CUV'),
+                'f_veh_other_vin'] = 'Car'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('Hatchback'),
-            'f_veh_other_vin'] = 'Car'
+        df.loc[df.BodyClass.fillna('-').str.contains('Hatchback'),
+                'f_veh_other_vin'] = 'Car'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('Convertible'),
-            'f_veh_other_vin'] = 'Car'
+        df.loc[df.BodyClass.fillna('-').str.contains('Convertible'),
+                'f_veh_other_vin'] = 'Car'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('Coupe'),
-            'f_veh_other_vin'] = 'Car'
+        df.loc[df.BodyClass.fillna('-').str.contains('Coupe'),
+                'f_veh_other_vin'] = 'Car'
 
-    df.loc[df.BodyClass.fillna('-').str.contains('Van'),
-            'f_veh_other_vin'] = 'Van'
+        df.loc[df.BodyClass.fillna('-').str.contains('Van'),
+                'f_veh_other_vin'] = 'Van'
 
-    df.loc[df.BodyClass=='Minivan',
-            'f_veh_other_vin'] = 'Minivan'
+        df.loc[df.BodyClass=='Minivan',
+                'f_veh_other_vin'] = 'Minivan'
 
-    df.loc[df.BodyClass=='Pickup',
-            'f_veh_other_vin'] = 'Pickup'
+        df.loc[df.BodyClass=='Pickup',
+                'f_veh_other_vin'] = 'Pickup'
 
-    df.loc[df.BodyClass=='Wagon',
-            'f_veh_other_vin'] = 'Car'
-    
+        df.loc[df.BodyClass=='Wagon',
+                'f_veh_other_vin'] = 'Car'
+    except:
+        0
         
     # final cleaning - fill all blanks
     df.fillna('unknown',inplace=True)
