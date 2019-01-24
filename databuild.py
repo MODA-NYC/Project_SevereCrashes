@@ -42,7 +42,8 @@ def buildTablesDMV(crash,ind,veh):
     '''
     # only police reported crashes
     # I'm assuming the POL_REPT variables says whether or not a police report was completed
-    # According to the codebook the INJT_ID variable 16,17,18 corresponds to the civilian crash form
+    # According to the codebook the INJT_ID variable 16,17,18 corresponds 
+    # to the civilian crashform
     # so filtering out those as well
     crashPR = crash[crash.POL_REPT=='Y']
     indPR = ind[ind.CS_ID.isin(crashPR.CS_ID)&(~ind.INJT_ID.isin(['16','17','18']))]
@@ -63,7 +64,7 @@ def buildTablesDMV(crash,ind,veh):
     
     ####
     # 2 veh crashes only
-    
+    '''
     twoVeh = base[base.VEH_CNT=='2']
 
     # merging in own vehicle info
@@ -83,7 +84,7 @@ def buildTablesDMV(crash,ind,veh):
     twoVeh = twoVeh.merge(vehMotor.add_suffix('_other'),
                       how='left',left_on='CV2_ID',right_on='CV_ID_other')
     print 'two veh', twoVeh.shape
-   
+    '''
     ####
     # only keeping 1 veh crashes
     ped = base[(base.CIROLET_ID.isin(['6','7','14']))&(base.VEH_CNT=='1')]
@@ -115,7 +116,7 @@ def buildTablesDMV(crash,ind,veh):
     
     print 'pedestrians/bicyclists (police reported) (single vehicle)',ped.shape
     
-    return ped, twoVeh
+    return ped
 
 def readLinked():
     ''' read in linked(matched) DMV/SPARKS data'''
