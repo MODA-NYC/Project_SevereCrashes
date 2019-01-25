@@ -178,7 +178,7 @@ def formatVars(df):
                 13 : 'None Visible',
                 14 : 'Whiplash'}
 
-    df['f_inj_type'] = df.INJT_ID.astype('float').map(inj_type)
+    df['f_InjuryType'] = df.INJT_ID.astype('float').map(inj_type)
 
     ###
     # injury status
@@ -186,7 +186,7 @@ def formatVars(df):
               2:'not conscious states',3:'not conscious states',4:'not conscious states',
               5:'conscious states',6:'conscious states'}
 
-    df['f_inj_status'] = df.EMTNSTATT_CDE.astype(float).map(status)
+    df['f_InjuryStatus'] = df.EMTNSTATT_CDE.astype(float).map(status)
     ###
     # injury location
     inj_loc = {1 : 'Head',
@@ -202,36 +202,36 @@ def formatVars(df):
                11 : 'Knee-Lower Leg-Foot',
                12 : 'Entire Body'}
 
-    df['f_inj_loc'] = df.INJLOCT_CDE.astype(float).map(inj_loc)
+    df['f_InjuryLoc'] = df.INJLOCT_CDE.astype(float).map(inj_loc)
     ###
     # person variables f_per
     # sex
     sex = {'M':'male','m':'male',
            'F':'female','f':'female'}
 
-    df['f_per_sex'] = df.CI_SEX_CDE.map(sex)
+    df['f_Sex'] = df.CI_SEX_CDE.map(sex)
     # incase df does not have other driver variables use try/except
     try:
-        df['f_driver_sex'] = df.CI_SEX_CDE_driver.map(sex)
+        df['f_DriverSex'] = df.CI_SEX_CDE_driver.map(sex)
     except:
         0
     ###
     # age
 
-    df['f_per_age'] = df.INDIV_AGE
-    df['f_per_age_dec'] = (np.floor(df.f_per_age/10)*10)
-    df['f_per_age_dec'] = df.f_per_age_dec.fillna('unknown').astype(str)
+    df['f_AgeYear'] = df.INDIV_AGE
+    df['f_AgeDecade'] = (np.floor(df.f_AgeYear/10)*10)
+    df['f_AgeDecade'] = df.f_AgeDecade.fillna('unknown').astype(str)
     # age over and under 70
-    df.loc[df.INDIV_AGE<70,'f_per_age_bi'] = 'age < 70'
-    df.loc[df.INDIV_AGE>=70,'f_per_age_bi'] = 'age >= 70'
+    df.loc[df.INDIV_AGE<70,'f_Age70'] = 'age < 70'
+    df.loc[df.INDIV_AGE>=70,'f_Age70'] = 'age >= 70'
 
     try:
-        df['f_driver_age'] = df.INDIV_AGE_driver
-        df['f_driver_age_dec'] = (np.floor(df.f_driver_age/10)*10)
-        df['f_driver_age_dec'] = df.f_driver_age_dec.fillna('unknown').astype(str)
+        df['f_DriverAgeYear'] = df.INDIV_AGE_driver
+        df['f_DriverAgeDecade'] = (np.floor(df.f_DriverAgeYear/10)*10)
+        df['f_DriverAgeDecade'] = df.f_DriverAgeDecade.fillna('unknown').astype(str)
          # age over and under 70
-        df.loc[df.INDIV_AGE_driver<70,'f_driver_age_bi'] = 'age < 70'
-        df.loc[df.INDIV_AGE_driver>=70,'f_driver_age_bi'] = 'age >= 70'
+        df.loc[df.INDIV_AGE_driver<70,'f_DriverAge70'] = 'age < 70'
+        df.loc[df.INDIV_AGE_driver>=70,'f_DriverAge70'] = 'age >= 70'
         
     except:
         0
@@ -243,14 +243,14 @@ def formatVars(df):
             7:'bicyclist',14:'bicyclist'}
     # not sure what 11=Registrant means, keeping it as unknown.
 
-    df['f_per_role'] = df.CIROLET_ID.astype('int').map(role)
+    df['f_Role'] = df.CIROLET_ID.astype('int').map(role)
     ###
     # ejected from vehicle
 
     ejected = {1 : 'not ejected',2:'ejected',3:'ejected'}
 
     try:
-        df['f_per_eject'] = df.EJCTT_ID.astype(float).map(ejected)
+        df['f_Eject'] = df.EJCTT_ID.astype(float).map(ejected)
     except:
         0
     ###
@@ -258,7 +258,7 @@ def formatVars(df):
     loc = {'1':'at intersection','2':'not at intersection'}
 
     try:
-        df['f_per_loc'] = df.PBLOCT_ID.map(loc)
+        df['f_PedLoc'] = df.PBLOCT_ID.map(loc)
     except:
         0    
     ###
@@ -271,11 +271,13 @@ def formatVars(df):
              4 : 'Dark-Road', #lit
              5 : 'Dark-Road'} #unlit
 
-    df['f_road_light'] = df.LGHTCNDT_ID.astype(int).map(light)
+    df['f_Lighting'] = df.LGHTCNDT_ID.astype(int).map(light)
 
     ###
     # time of day
-    df['f_period'] = np.floor(df.HR1.astype(float)/3)
+    df['f_TimeOfDay'] = np.floor(df.HR1.astype(float)/3)
+    
+    
     ###
     # road surface
     surf = {1 : 'Dry',
@@ -284,7 +286,7 @@ def formatVars(df):
             4 : 'Not Dry',
             5 : 'Not Dry',
             6 : 'Not Dry'}       
-    df['f_road_surf'] = df.RDSRFT_ID.astype(int).map(surf)
+    df['f_RoadSurface'] = df.RDSRFT_ID.astype(int).map(surf)
 
     ###
     # weather
@@ -297,7 +299,7 @@ def formatVars(df):
         6 : 'Cloudy',#'Fog/Smog/Smoke',
         #9 : 'Other' 
     }
-    df['f_road_weather'] = df.WTHRT_ID.astype(int).map(weather)
+    df['f_Weather'] = df.WTHRT_ID.astype(int).map(weather)
     
     ###
     # traffic control
@@ -320,13 +322,13 @@ def formatVars(df):
         '16' : 'Other',#'School zone',
         '20' : 'Other'}
 
-    df['f_road_control'] = df.TFCCTRLT_ID.map(control)
+    df['f_TrafficControl'] = df.TFCCTRLT_ID.map(control)
     ###
     # pre-collision action f_act
 
     # pedestrian bicyclist action
     # even if the injured is not a pedestrian, this can be filled out
-    # it comes from the DMV crash table
+    # it comes from the DMV crash table (not the person table)
     pedaction = {
         1 : 'Crossing, With Signal',
         2 : 'Crossing, Against Signal',
@@ -343,7 +345,7 @@ def formatVars(df):
         13 : 'Other',#'Other Acrions in Roadway',
         14 : 'Other',#'Not in Roadway (Indicate)'
     }
-    df['f_act_ped'] = pd.to_numeric(df.PBACTT_DMV_CDE).map(pedaction)
+    df['f_PedAction'] = pd.to_numeric(df.PBACTT_DMV_CDE).map(pedaction)
 
     ###
     # vehicle action
@@ -368,12 +370,12 @@ def formatVars(df):
         18 : 'Other',#'Police Pursuit',
         20 : 'Other'}
     try:
-        df['f_act_veh_other'] = df.PACCACTT_ID_other.astype(float).map(action)
-        df['f_act_veh'] = df.PACCACTT_ID.astype(float).map(action)
+        df['f_OtherVehAction'] = df.PACCACTT_ID_other.astype(float).map(action)
+        df['f_VehAction'] = df.PACCACTT_ID.astype(float).map(action)
     except:
         0
 
-    '''
+   
     ###
     # vehicle body type from DMV encoding
     vehicle = {
@@ -419,58 +421,58 @@ def formatVars(df):
         103 : 'Bicyclist',
     }
 
-    df['f_veh_other'] = df.VEHBDYT_ID_other.map(vehicle)
+    df['f_OtherVehType'] = df.VEHBDYT_ID_other.map(vehicle)
     try:
-        df['f_veh'] = df.VEHBDYT_ID.map(vehicle)
+        df['f_VehType'] = df.VEHBDYT_ID.map(vehicle)
     except:
         0
-    '''    
+    
     ###
     # veh body type from decoded VIN
     # pedestrian only has other vehicle.
     try: 
-        df['f_veh_other_vin']='none'
+        df['f_OtherVehTypeVIN']='unknown'
         df.loc[df.BodyClass.fillna('-').str.contains('Motorcycle'),
-                'f_veh_other_vin'] = 'Motorcycle'
+                'f_OtherVehTypeVIN'] = 'Motorcycle'
 
         df.loc[df.BodyClass.fillna('-').str.contains('SUV'),
-                'f_veh_other_vin'] = 'SUV'
+                'f_OtherVehTypeVIN'] = 'SUV'
 
         df.loc[df.BodyClass.fillna('-').str.contains('SUV'),
-                'f_veh_other_vin'] = 'SUV'
+                'f_OtherVehTypeVIN'] = 'SUV'
 
         df.loc[df.BodyClass.fillna('-').str.contains('Bus'),
-                'f_veh_other_vin'] = 'Bus'
+                'f_OtherVehTypeVIN'] = 'Bus'
 
         df.loc[df.BodyClass.fillna('-').str.contains('Truck'),
-                'f_veh_other_vin'] = 'Truck'
+                'f_OtherVehTypeVIN'] = 'Truck'
 
         df.loc[df.BodyClass.fillna('-').str.contains('Sedan'),
-                'f_veh_other_vin'] = 'Car'
+                'f_OtherVehTypeVIN'] = 'Car'
 
         df.loc[df.BodyClass.fillna('-').str.contains('CUV'),
-                'f_veh_other_vin'] = 'Car'
+                'f_OtherVehTypeVIN'] = 'Car'
 
         df.loc[df.BodyClass.fillna('-').str.contains('Hatchback'),
-                'f_veh_other_vin'] = 'Car'
+                'f_OtherVehTypeVIN'] = 'Car'
 
         df.loc[df.BodyClass.fillna('-').str.contains('Convertible'),
-                'f_veh_other_vin'] = 'Car'
+                'f_OtherVehTypeVIN'] = 'Car'
 
         df.loc[df.BodyClass.fillna('-').str.contains('Coupe'),
-                'f_veh_other_vin'] = 'Car'
+                'f_OtherVehTypeVIN'] = 'Car'
 
         df.loc[df.BodyClass.fillna('-').str.contains('Van'),
-                'f_veh_other_vin'] = 'Van'
+                'f_OtherVehTypeVIN'] = 'Van'
 
         df.loc[df.BodyClass=='Minivan',
-                'f_veh_other_vin'] = 'Minivan'
+                'f_OtherVehTypeVIN'] = 'Minivan'
 
         df.loc[df.BodyClass=='Pickup',
-                'f_veh_other_vin'] = 'Pickup'
+                'f_OtherVehTypeVIN'] = 'Pickup'
 
         df.loc[df.BodyClass=='Wagon',
-                'f_veh_other_vin'] = 'Car'
+                'f_OtherVehTypeVIN'] = 'Car'
     except:
         0
         
