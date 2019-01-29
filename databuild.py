@@ -274,9 +274,17 @@ def formatVars(df):
     df['f_Lighting'] = df.LGHTCNDT_ID.astype(int).map(light)
 
     ###
-    # time of day
-    df['f_TimeOfDay'] = np.floor(df.HR1.astype(float)/3)
-    
+    # time of day    
+    timeperiod = {0:'midnight-3am',
+             1:'3am-6am',
+             2:'6am-9am',
+             3:'9am-noon',
+             4:'noon-3pm',
+             5:'3pm-6pm',
+             6:'6pm-9pm',
+             7:'9pm-midnight'}
+
+    df['f_TimeOfDay']= np.floor(df.HR1.astype(float)/3).map(timeperiod)
     
     ###
     # road surface
