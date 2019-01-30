@@ -6,6 +6,8 @@ LinkedDataExplore.ipynb - exploring the matched data
 
 VariableMap.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
 
+[Presentation](https://docs.google.com/presentation/d/10jSJB2S1bgb-1O6iJZV3ERY3E3v33EOW5WoPlB-XZ5Y/edit?usp=sharing)
+
 
 # DOT Classifying Severe Crashes
 Predicting which traffic crashes result in severe injuries helps to prioritize locations for street safety redesign.
