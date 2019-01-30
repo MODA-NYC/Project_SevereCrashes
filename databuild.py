@@ -429,8 +429,8 @@ def formatVars(df):
         103 : 'Bicyclist',
     }
 
-    df['f_OtherVehType'] = df.VEHBDYT_ID_other.map(vehicle)
     try:
+        df['f_OtherVehType'] = df.VEHBDYT_ID_other.map(vehicle)
         df['f_VehType'] = df.VEHBDYT_ID.map(vehicle)
     except:
         0
