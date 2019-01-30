@@ -1,4 +1,4 @@
-Jupyter Workbooks:
+Jupyter Notebooks:
 
 PedAnalysis.ipynb - main notebook for analysis
 
