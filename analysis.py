@@ -107,14 +107,17 @@ def fitPlotMult(data, pred,response ='biss_severity_9',N=10,test_size=.20):
 
 
 def median_recall(df):
-    #values = {'precision':prec_dmv_9,'recall':rec_dmv_9}
-    #des = df.fillna(value=values).describe([.1,.5,.9])
-    des = df.describe([.1,.5,.9])
+    '''
+    returns the 5%, 50%, 95% values
+    '''
+    des = df.describe([.05,.50,.95])
     med = des.loc[['50%']].recall[0]
-    low = des.loc[['10%']].recall[0]
-    high = des.loc[['90%']].recall[0]
+    low = des.loc[['5%']].recall[0]
+    high = des.loc[['95%']].recall[0]
     return format(med,'.2f'),format(low,'.2f'),format(high,'.2f')
     
+    
+#note: forward and backward select are not used
 def forwardSelect(data,startVar,unusedVar, epsilon=0):
     '''forwards selection'''
     # starting recall
