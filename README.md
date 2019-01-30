@@ -15,10 +15,9 @@ Using linked crash and hospital data we were able to evaluate DOT’s formula fo
 
 Our findings confirm that the current formula, which relies on police officer’s reporting of injury, largely tracks with hospital designated injury outcomes. However some improvement is possible. We developed two methods that improve upon the current formula.
 
-In addition we found that the older adults are over twice as likely to be severely injured in a crash as a random pedestrian. 
+In addition we found that the older adults are more vulnerable on city streets Pedestrians over age 70 were 2.5 times more likely to sustain severe injuries than a random pedestrian who is hit by a motor vehicle. 
 
 This project was a partnership between MODA, DOT, and DOHMH. 
-
 
 # Scoping
 Every year in NYC there are over 40 thousand traffic crashes where someone is injured. The vast majority of these injuries are minor. Around 250 crashes are fatal, but many more result in serious injuries, close to death, with potentially long term effects on the injured and their loved ones. Being able to separate out the most severe crashes from the rest allows for the City to have a more focused response on safety interventions, including where to prioritize street safety redesign.
@@ -39,19 +38,20 @@ LinkedDataExplore.ipynb
 
 
 # Analysis
-We found that most attributes listed as K or A from KABCO ranked high on the Severity Ratio scale (i.e. they also tracked as severe as measured by the hospital outcomes). The exceptions are eye injuries and burns, both of which do not have enough data points to assign a meaningful Severity Ratio. 
 
-The other finding is that age is extremely important in classifying severity. Pedestrians over age 70 were 2.5 times more likely to sustain severe injuries than a random pedestrian who is hit by a motor vehicle. 
+![Data Flow](img/SeverityRatio.jpg)
 
-The Severity Ratio is allows us to see which crash attributes are more indicative of severe crashes than other, but it doesn’t give a quantitatively understanding of  improving on the original DMV KABCO formula.
+We developed the Severity Ratio to show which crash attributes are more indicative of severe crashes. SR is defined as the probability of an injured person in a crash having severe injuries given a specific crash attribute is present divided by the overall probability of an injured person having severe injuries. For pedestrians around 10% of the injured are severe. 
 
-We propose two new methods for developing with a new KSI formula. We evaluate these formulas using precision and recall metrics where the ground truth is the hospital outcomes (b-ISS). 
+In addition, we propose two methods for developing a new KSI formula. The formulas are evaluated using precision and recall metrics, where the ground truth is the hospital outcomes (b-ISS). 
 
-**New KSI formula 1: KABCO plus**
-This is the most straightforward approach to changing the KABCO formula. In addition to crashes that are ranked K or A in KABCO, we also include other crash attributes that had high SR. These include: head injuries, age 70+, and the other vehicle being a motorcycle or truck. We found that adding in any or all of these categories captures more severe cases, but decreases the percentage of severe cases in the target group. 
+**New KSI formula 1: KABCO Plus**
+This is the most straightforward approach to changing the KABCO formula. In addition to crashes that are ranked K or A in KABCO, we also include other crash attributes that had high SR. These include: head injuries, age 70+, and the other vehicle being a motorcycle or truck. We found that adding in any or all of these categories captures more severe cases, but decreases the percentage of actual severe cases in the labeled or target group. 
 
 **New KSI formula 2: Scoring system using logistic regression models**
-This is a more flexible method allowing us to keep precision constant while improving recall by around 20%
+We used logistic regression to develop a more flexible method allowing us to keep precision constant while improving recall by around 20%.
+
+The simpler formula (KABCO Plus) presents us with a trade off of precision and recall compared to the current formula. A more complicated model can improve on either precision or recall, but the improvement is modest.. 
 
 VariableMap.ipynb
 
