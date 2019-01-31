@@ -2,7 +2,7 @@ Jupyter Notebooks:
 
 PedAnalysis.ipynb - main notebook for analysis
 
-LinkedDataExplore.ipynb - exploring the matched data
+DataDetail.ipynb - more detail on the datasets
 
 VariableMap.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
 
@@ -33,10 +33,14 @@ DOT’s current KSI metric refers to crashes with a K or A score from KABCO. The
 While this formula has been used for some time, there hasn’t been a way to evaluate it or improve on it.
 
 # Data 
+
+* MV104 crash database (crash, vehicle, and person tables)
+* SPARCS hospital data
+
 In 2017 DOHMH linked police crash report data with hospital data. Reference: Conderino, S, Fung, L  et al. “Linkage of traffic crash and hospitalization records with limited identifiers for enhanced public health surveillance” AA&P 2017.   
 We used this data for our analysis.
 
-LinkedDataExplore.ipynb
+DataExplore.ipynb
 
 
 # Analysis
