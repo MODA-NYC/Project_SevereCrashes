@@ -1,10 +1,10 @@
 Jupyter Notebooks:
 
-PedAnalysis.ipynb - main notebook for analysis
-
-DataDetail.ipynb - more detail on the datasets
-
-VariableMap.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
+* PedAnalysis.ipynb - main notebook for analysis
+* DataDetail.ipynb - more detail on the datasets
+* VariableMap.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
+* VIN.ipynb - details on getting vehicle body type from the shortened VIN
+* VIN-LinkedData.ipynb - script that converts the VIN to NHTSA's body type
 
 [Presentation](https://docs.google.com/presentation/d/10jSJB2S1bgb-1O6iJZV3ERY3E3v33EOW5WoPlB-XZ5Y/edit?usp=sharing)
 
