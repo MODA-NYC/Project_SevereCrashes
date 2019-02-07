@@ -164,7 +164,7 @@ def formatVars(df):
     #injury variables f_inj
     # injury type
     inj_type = {1: 'Amputation',
-                2 : 'Concusion',
+                2 : 'Concussion',
                 3 : 'Internal',
                 4 : 'Minor Bleeding',
                 5 : 'Severe Bleeding',
@@ -182,9 +182,12 @@ def formatVars(df):
 
     ###
     # injury status
-    status = {1:'not conscious states',#'death',
-              2:'not conscious states',3:'not conscious states',4:'not conscious states',
-              5:'conscious states',6:'conscious states'}
+    status = {1:'Not Conscious States',#'death',
+              2:'Not Conscious States',# unconscious
+              3:'Not Conscious States',# semicouncious
+              4:'Not Conscious States',# incoherent
+              5:'Conscious states', # shock
+              6:'Conscious states'} # conscious
 
     df['f_InjuryStatus'] = df.EMTNSTATT_CDE.astype(float).map(status)
     ###
