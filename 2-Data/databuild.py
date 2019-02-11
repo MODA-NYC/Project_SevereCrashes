@@ -109,7 +109,7 @@ def buildTablesDMV(crash,ind,veh):
     ped = ped[~(ped.duplicated('CI_ID'))] #one of the drivers is duplicated, so dropping.
     
     # read in vin decoded vehicle type info
-    vin_api_data = pd.read_csv('vin_api_data.csv')
+    vin_api_data = pd.read_csv('../2-Data/vin_api_data.csv')
     # merge onto matched data
     ped = ped.merge(vin_api_data[['VIN','BodyClass']],
                     how='left',left_on='VIN_other',right_on='VIN')
