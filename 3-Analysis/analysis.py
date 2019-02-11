@@ -5,6 +5,7 @@ from patsy import dmatrices
 from sklearn.model_selection import train_test_split,KFold
 from sklearn.metrics import confusion_matrix
 import statsmodels.api as sm
+import itertools
 
 
 
@@ -252,11 +253,11 @@ def varSelect(data,varOfInt,N=10):
     # adding additional variable pairs and calculating recall
     for x in list(itertools.combinations(varOfInt,2)):
         pred = inj + [x[0],x[1]]
-        op = an.fitPlotMult(data=data, pred=pred, N=N)
+        op = fitPlotMult(data=data, pred=pred, N=N)
         models = models.append([{'model':'+'.join([x[0],x[1]]),
-                                'recall':float(an.median_recall(op)[0]),
-                                'recall low':float(an.median_recall(op)[1]),
-                                'recall high': float(an.median_recall(op)[2]),
+                                'recall':float(median_recall(op)[0]),
+                                'recall low':float(median_recall(op)[1]),
+                                'recall high': float(median_recall(op)[2]),
                                 }],
                                 ignore_index=True)
     models.index = models.model
@@ -272,10 +273,6 @@ def varSelect(data,varOfInt,N=10):
     models['delta high'] = models['recall high'] - models['recall']
     
     return models
-
-
-
-
 
     
 #note: forward and backward select are not used
