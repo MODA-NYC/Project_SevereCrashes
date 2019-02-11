@@ -1,18 +1,18 @@
 Folders:
-* 1.Scope - includes project scope of work and background documents
-* 2.Data - includes data dictionaries, exploritory data notebooks, and data cleaning scripts
-* 3.Analysis - includes analysis notebooks and scripts
+* 1-Scope - includes project scope of work and background documents
+* 2-Data - includes data dictionaries, exploritory data notebooks, and data cleaning scripts
+* 3-Analysis - includes analysis notebooks and scripts
 * img - images, graphs used in presentations and notebooks
 * presentations - contains final presentations and other writeups
 
 Jupyter Notebooks:
 
-* 2.Data/DataDetail.ipynb - more detail on the datasets
-* 2.Data/VariableMap.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
-* 2.Data/VIN.ipynb - details on getting vehicle body type from the shortened VIN
-* 2.Data/VIN-LinkedData.ipynb - script that converts the VIN to NHTSA's body type
-* 3.Analysis/SeverityRatio.ipynb - details on severity ratio calculations
-* 3.Analysis/NewFormulas.ipynb - details on evaluating new formulas with precision recall metrics
+* 2-Data/DataDetail.ipynb - more detail on the datasets
+* 2-Data/VariableMap.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
+* 2-Data/VIN.ipynb - details on getting vehicle body type from the shortened VIN
+* 2-Data/VIN-LinkedData.ipynb - script that converts the VIN to NHTSA's body type
+* 3-Analysis/SeverityRatio.ipynb - details on severity ratio calculations
+* 3-Analysis/NewFormulas.ipynb - details on evaluating new formulas with precision recall metrics
 
 
 # DOT Classifying Severe Crashes
@@ -36,17 +36,9 @@ Crashes resulting in deaths are relatively straightforward to identify but wheth
 
 **DOT’s current KSI** metric refers to crashes with a K or A score from KABCO. These are crashes where:
 * the reported **injury status** is one of the following: 
-  - Death, 
-  - Unconscious, 
-  - Semiconscious, 
-  - Incoherent; 
+  - Death, Unconscious, Semiconscious, Incoherent; 
 * the reported **injury type** is one of the following: 
-  - Amputation, 
-  - Concussion, 
-  - Internal, 
-  - Severe Bleeding, 
-  - Severe/Moderate Burn, 
-  - Fracture-Dislocation; 
+  - Amputation, Concussion, Internal, Severe Bleeding, Severe/Moderate Burn, Fracture-Dislocation; 
 * Or the **injury location** is 
   - the eye. 
 
@@ -62,7 +54,7 @@ While this formula has been used for some time, there hasn’t been a way to eva
 
 In 2017 DOHMH linked police crash report data with hospital data. Reference: Conderino, S, Fung, L  et al. “Linkage of traffic crash and hospitalization records with limited identifiers for enhanced public health surveillance” AA&P 2017.   
 
-We used this linked data for our analysis. More details on the data can be found in DataDetails.ipynb notebook.
+We used this linked data for our analysis. More details on the data can be found in [DataDetails.ipynb](https://github.com/MODA-NYC/Project_SevereCrashes/blob/master/2-Data/DataDetail.ipynb) notebook.
 
 
 # 3. Analysis
@@ -71,7 +63,7 @@ We used this linked data for our analysis. More details on the data can be found
 
 We developed the Severity Ratio to show which crash attributes are more indicative of severe crashes. SR is defined as the probability of an injured person in a crash having severe injuries given a specific crash attribute is present divided by the overall probability of an injured person having severe injuries. For pedestrians and bicyclists around 10% of the injured are severe. 
 
-More details can be found in the SeverityRatio.ipynb notebook.
+More details can be found in the [SeverityRatio.ipynb](https://github.com/MODA-NYC/Project_SevereCrashes/blob/master/3-Analysis/SeverityRatio.ipynb) notebook.
 
 In addition, we propose two methods for developing a new KSI formula. The formulas are evaluated using precision and recall metrics, where the ground truth is the hospital outcomes (b-ISS severity). 
 
@@ -83,7 +75,7 @@ We used logistic regression to develop a more flexible method allowing us to kee
 
 The simpler formula (KABCO Plus) presents us with a trade off of precision and recall compared to the current formula. A more complicated model can improve on either precision or recall, but the improvement is modest.. 
 
-More details on these formulas can be found in the NewFormulas.ipynb notbook.
+More details on these formulas can be found in the [NewFormulas.ipynb](https://github.com/MODA-NYC/Project_SevereCrashes/blob/master/3-Analysis/NewFormulas.ipynb) notbook.
 
 # 4. Pilot
 DOT decided, based on this analysis, the current KABCO system for identifying severe crashes is sound and they will not change it going forward. 
