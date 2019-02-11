@@ -5,15 +5,6 @@ Folders:
 * img - images, graphs used in presentations and notebooks
 * presentations - contains final presentations and other writeups
 
-Jupyter Notebooks:
-
-* 2-Data/DataDetail.ipynb - more detail on the datasets
-* 2-Data/VariableMap.ipynb - explicitly showing the mapping from coded variables to descriptive variables using the data dictionary (actual mapping takes place in analysis.py)
-* 2-Data/VIN.ipynb - details on getting vehicle body type from the shortened VIN
-* 2-Data/VIN-LinkedData.ipynb - script that converts the VIN to NHTSA's body type
-* 3-Analysis/SeverityRatio.ipynb - details on severity ratio calculations
-* 3-Analysis/NewFormulas.ipynb - details on evaluating new formulas with precision recall metrics
-
 
 # DOT Classifying Severe Crashes
 Predicting which traffic crashes result in severe injuries helps to prioritize locations for street safety redesign.
