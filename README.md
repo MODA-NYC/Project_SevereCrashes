@@ -6,7 +6,7 @@ Folders:
 * presentations - contains final presentations and other writeups
 
 
-# DOT Classifying Severe Crashes
+# Predicting Injury Outcomes using Data Linkage
 Predicting which traffic crashes result in severe injuries helps to prioritize locations for street safety redesign.
 
 # Overview
