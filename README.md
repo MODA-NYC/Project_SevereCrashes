@@ -69,7 +69,7 @@ The simpler formula (KABCO Plus) presents us with a trade off of precision and r
 More details on these formulas can be found in the [NewFormulas.ipynb](https://github.com/MODA-NYC/Project_SevereCrashes/blob/master/3-Analysis/NewFormulas.ipynb) notbook.
 
 # 4. Pilot
-DOT decided, based on this analysis, the current KABCO system for identifying severe crashes is sound and they will not change it going forward. 
+DOT decided, based on this analysis, the current KABCO system for identifying severe crashes is sound and they will not advocate for the DMV to change it going forward. 
 
 Independent of this analysis, DOT has started researching safety engineering standards focused on older adults. 
 
